@@ -16,3 +16,4 @@ echo "author's email validation: OK"
 HOOKS
 
 chmod +x ./.git/hooks/pre-commit 
+echo "successfully initialized git hook"
