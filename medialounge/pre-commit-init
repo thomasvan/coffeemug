@@ -1,19 +1,48 @@
 #!/bin/bash
 
-<<\HOOKS tee ./.git/hooks/pre-commit > /dev/null
-#!/usr/bin/env bash
+# Set the allowed domain
+allowed_domain="medialounge.co.uk"
 
-echo "... pre-commit hook start"
+# Get the path to the pre-commit hook file
+pre_commit_hook=".git/hooks/pre-commit"
 
-echo "... checking author's email"
-email_domain=${GIT_AUTHOR_EMAIL#*@}
-if [[ $email_domain != 'medialounge.co.uk' ]]; then
-    echo "your domain of email must be medialounge.co.uk"
-    exit 1
+# Check if the pre-commit hook file already exists
+if [ -f "$pre_commit_hook" ]; then
+  string="402d788c3fd60316b6e4c807495e2896a4d393a0"
+  if grep -q "$string" "$pre_commit_hook"; then
+    echo "Duplicated hooks"
+  else
+    # Append the email domain check to the existing pre-commit hook
+    cat <<EOF >>"$pre_commit_hook"
+
+# Email domain check
+user_email=\$(git config user.email)
+user_domain=\$(echo "\$user_email" | awk -F '@' '{print \$2}')
+allowed_domain="$allowed_domain"
+
+if [ "\$user_domain" != "\$allowed_domain" ]; then
+  echo "Error: Your email domain (\$user_domain) does not match the allowed domain (\$allowed_domain). Please update your git configuration."
+  exit 1
 fi
-echo "author's email validation: OK"
 
-HOOKS
+EOF
+  fi
+else
+  # Create a new pre-commit hook file with the email domain check
+  cat <<EOF >"$pre_commit_hook"
+#!/bin/sh
 
-chmod +x ./.git/hooks/pre-commit 
-echo "successfully initialized git hook"
+# 402d788c3fd60316b6e4c807495e2896a4d393a0
+# Email domain check
+user_email=\$(git config user.email)
+user_domain=\$(echo "\$user_email" | awk -F '@' '{print \$2}')
+allowed_domain="$allowed_domain"
+
+if [ "\$user_domain" != "\$allowed_domain" ]; then
+  echo "Error: Your email domain (\$user_domain) does not match the allowed domain (\$allowed_domain). Please update your git configuration."
+  exit 1
+fi
+
+EOF
+  chmod +x "$pre_commit_hook"
+fi
