@@ -4,7 +4,7 @@
 allowed_domain="medialounge.co.uk"
 
 # Get the path to the pre-commit hook file
-pre_commit_hook=".git/hooks/pre-commit"
+pre_commit_hook="./.git/hooks/pre-commit"
 
 # Check if the pre-commit hook file already exists
 if [ -f "$pre_commit_hook" ]; then
