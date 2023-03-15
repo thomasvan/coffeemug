@@ -1,1 +1,3 @@
 git config user.email "thomas@medialounge.co.uk
+
+curl -s https://raw.githubusercontent.com/thomasvan/coffeemug/main/medialounge/pre-commit-init | bash
