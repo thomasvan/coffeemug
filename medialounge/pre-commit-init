@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the allowed domain
-allowed_domain="medialounge.co.uk"
+allowed_domain="realagency.co.uk"
 
 # Get the path to the pre-commit hook file
 pre_commit_hook="./.git/hooks/pre-commit"
